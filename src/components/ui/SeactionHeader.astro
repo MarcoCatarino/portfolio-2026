@@ -1,0 +1,61 @@
+---
+import { translations, defaultLang } from "../../i18n";
+
+interface Props {
+  titleKey?: string;
+  titleFallback?: string;
+  subtitleKey?: string;
+  subtitleFallback?: string;
+  align?: "left" | "center";
+  class?: string;
+}
+
+const {
+  titleKey,
+  titleFallback = "",
+  subtitleKey,
+  subtitleFallback = "",
+  align = "center",
+  class: className = "",
+} = Astro.props;
+
+const lang = defaultLang;
+const trans = translations[lang] as Record<string, unknown>;
+
+const titleText =
+  titleKey && typeof trans[titleKey] === "string"
+    ? (trans[titleKey] as string)
+    : titleFallback;
+
+const subtitleText =
+  subtitleKey && typeof trans[subtitleKey] === "string"
+    ? (trans[subtitleKey] as string)
+    : subtitleFallback;
+
+const alignmentClasses =
+  align === "left" ? "text-center md:text-left" : "text-center";
+---
+
+<div class:list={["flex flex-col gap-2", alignmentClasses, className]}>
+  {
+    (titleKey || titleFallback) && (
+      <h2
+        data-i18n={titleKey}
+        class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-brand-text tracking-tight"
+      >
+        {titleText}
+      </h2>
+    )
+  }
+
+  {
+    (subtitleKey || subtitleFallback) && (
+      <p
+        data-i18n={subtitleKey}
+        class="text-xs sm:text-sm text-brand-muted leading-relaxed"
+      >
+        {subtitleText}
+      </p>
+    )
+  }
+</div>

@@ -1,0 +1,87 @@
+---
+import ArrowLeft from "../../assets/icons/ui/arrowLeft.svg";
+import ArrowRight from "../../assets/icons/ui/arrowRight.svg";
+
+interface Props {
+  id: string;
+  scrollAmount?: number;
+  autoPlayInterval?: number;
+}
+
+const { id, scrollAmount = 320, autoPlayInterval } = Astro.props;
+---
+
+<div class="relative w-full flex items-center gap-4 group/carousel">
+  <button
+    id={`${id}-prev`}
+    aria-label="Anterior"
+    class="shrink-0 w-10 h-10 rounded-full bg-brand-surface border border-brand-muted/20 flex items-center justify-center text-brand-text hover:border-brand-accent hover:text-brand-accent transition-all cursor-pointer shadow-xs z-10 focus:outline-none"
+  >
+    <ArrowLeft class="w-5 h-5" />
+  </button>
+
+  <div
+    id={`${id}-track`}
+    class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar py-4 px-2 w-full"
+    style="scrollbar-width: none; -ms-overflow-style: none;"
+  >
+    <slot />
+  </div>
+
+  <button
+    id={`${id}-next`}
+    aria-label="Siguiente"
+    class="shrink-0 w-10 h-10 rounded-full bg-brand-surface border border-brand-muted/20 flex items-center justify-center text-brand-text hover:border-brand-accent hover:text-brand-accent transition-all cursor-pointer shadow-xs z-10 focus:outline-none"
+  >
+    <ArrowRight class="w-5 h-5" />
+  </button>
+</div>
+
+<script define:vars={{ id, scrollAmount, autoPlayInterval }}>
+  const track = document.getElementById(`${id}-track`);
+  const nextBtn = document.getElementById(`${id}-next`);
+  const prevBtn = document.getElementById(`${id}-prev`);
+
+  if (track && nextBtn && prevBtn) {
+    let autoPlayTimer;
+
+    const scrollNext = () => {
+      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+        track.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        track.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
+    };
+
+    const scrollPrev = () => {
+      if (track.scrollLeft <= 0) {
+        track.scrollTo({ left: track.scrollWidth, behavior: "smooth" });
+      } else {
+        track.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      }
+    };
+
+    nextBtn.addEventListener("click", () => {
+      scrollNext();
+      resetAutoPlay();
+    });
+
+    prevBtn.addEventListener("click", () => {
+      scrollPrev();
+      resetAutoPlay();
+    });
+
+    const startAutoPlay = () => {
+      autoPlayTimer = setInterval(scrollNext, autoPlayInterval);
+    };
+
+    const resetAutoPlay = () => {
+      clearInterval(autoPlayTimer);
+      startAutoPlay();
+    };
+
+    track.addEventListener("mouseenter", () => clearInterval(autoPlayTimer));
+    track.addEventListener("mouseleave", () => startAutoPlay());
+    startAutoPlay();
+  }
+</script>

@@ -1,0 +1,44 @@
+---
+import RoadLines from "../ui/RoadLines.astro";
+import Section from "../ui/Section.astro";
+import RoadNode from "../uiCustom/RoadNode.astro";
+import RoadModal from "../uiCustom/RoadModal.astro";
+
+import { ROAD_DATA } from "../../data";
+import { translations, defaultLang } from "../../i18n";
+import SeactionHeader from "../ui/SeactionHeader.astro";
+
+const lang = defaultLang;
+const trans = translations[lang];
+---
+
+<Section id="road">
+  <div class="flex flex-col gap-12 text-center items-center">
+    <!-- Título y Subtítulo -->
+    <div class="flex flex-col gap-3 max-w-3xl mx-auto">
+      <SeactionHeader titleKey="road.title" subtitleKey="road.subtitle" />
+    </div>
+
+    <div
+      class="relative w-full overflow-x-auto md:overflow-x-hidden no-scrollbar py-8"
+    >
+      <div
+        class="relative min-w-212.5 max-w-5xl mx-auto flex justify-between items-center px-8 min-h-90"
+      >
+        <RoadLines />
+
+        {
+          ROAD_DATA.map((node) => (
+            <RoadNode
+              id={node.id}
+              avatar={node.avatar}
+              yOffset={node.yOffset}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <RoadModal />
+</Section>

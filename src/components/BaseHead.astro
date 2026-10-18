@@ -1,0 +1,71 @@
+---
+import "../styles/global.css";
+
+import type { ImageMetadata } from "astro";
+import { Font } from "astro:assets";
+
+import { SITE_TITLE } from "../consts";
+import FallbackImage from "../../public/favicon.svg";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+}
+
+const {
+  title,
+  description,
+  image = FallbackImage,
+  imageAlt = "Marco portfolio logo",
+} = Astro.props;
+
+const siteURL = Astro.site || "http://localhost:4321";
+const canonicalURL = new URL(Astro.url.pathname, siteURL);
+const resolvedImageURL = new URL(image.src, siteURL);
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+/>
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={SITE_TITLE}
+  href={new URL("rss.xml", siteURL)}
+/>
+<meta name="generator" content={Astro.generator} />
+
+<!-- Typography -->
+<Font cssVariable="--font-ibm-plex" preload />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Primary Meta Tags -->
+<title>{title}</title>
+<meta name="description" content={description} />
+
+<!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={resolvedImageURL} />
+<meta property="og:image:alt" content={imageAlt} />
+
+<!-- Twitter / X Cards -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={resolvedImageURL} />

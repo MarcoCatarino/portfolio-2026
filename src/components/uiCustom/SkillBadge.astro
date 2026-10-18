@@ -1,0 +1,44 @@
+---
+interface Props {
+  name: string;
+  level?: "ADVANCED" | "INTERMEDIATE" | "BEGINNING";
+  showLevel?: boolean;
+}
+
+const { name, level = "ADVANCED", showLevel = true } = Astro.props;
+
+const levelStyles = {
+  ADVANCED:
+    "bg-emerald-450/70 text-emerald-500 border-emerald-800/ dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-800/40",
+  INTERMEDIATE:
+    "bg-sky-450/60 text-sky-500 border-sky-800/40 dark:bg-sky-950/60 dark:text-sky-400 dark:border-sky-800/40",
+  BEGINNING:
+    "bg-amber-450/60 text-amber-500 border-amber-800/40 dark:bg-amber-950/60 dark:text-amber-400 dark:border-amber-800/40",
+};
+---
+
+<div
+  class="flex items-center justify-between py-2 px-3 rounded-full border border-brand-muted/20 bg-brand-surface max-w-75 w-full hover:border-brand-accent/50 transition-all shadow-sm gap-3"
+>
+  <div class="flex items-center gap-3 min-w-0">
+    <div
+      class="w-8 h-8 shrink-0 rounded-full bg-[#F5F2EB] dark:bg-[#aeb1b5] flex items-center justify-center border border-brand-muted/15 shadow-2xs"
+    >
+      <slot name="icon" />
+    </div>
+
+    <span class="font-mono text-sm font-medium text-brand-text truncate">
+      {name}
+    </span>
+  </div>
+
+  {
+    showLevel && (
+      <span
+        class={`font-mono text-[9px] tracking-wider uppercase px-2 py-0.5 rounded-full border font-semibold shrink-0 ${levelStyles[level]}`}
+      >
+        {level}
+      </span>
+    )
+  }
+</div>

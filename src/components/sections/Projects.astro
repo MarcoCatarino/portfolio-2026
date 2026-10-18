@@ -1,0 +1,45 @@
+---
+import Section from "../ui/Section.astro";
+import Carousel from "../ui/Carousel.astro";
+import SeactionHeader from "../ui/SeactionHeader.astro";
+import ProjectCard from "../uiCustom/ProjectCard.astro";
+import ProjectModal from "../uiCustom/ProjectModal.astro";
+
+import { PROJECTS_DATA } from "../../data";
+import { getT } from "../../i18n";
+
+const t = getT();
+---
+
+<Section id="projects">
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-2 text-center md:text-left">
+      <SeactionHeader titleKey="project.title" subtitleKey="project.subtitle" />
+    </div>
+
+    <Carousel id="projects-carousel" scrollAmount={520} autoPlayInterval={2500}>
+      {
+        PROJECTS_DATA.map((project) => {
+          const titleKey = `project.${project.id}.title`;
+          const descKey = `project.${project.id}.desc`;
+
+          return (
+            <div class="snap-start shrink-0 w-full sm:w-125">
+              <ProjectCard
+                id={project.id}
+                title={t(titleKey, project.id)}
+                description={t(descKey, "Descripción del proyecto")}
+                titleKey={titleKey}
+                descKey={descKey}
+                image={project.image}
+                tags={project.tags}
+              />
+            </div>
+          );
+        })
+      }
+    </Carousel>
+  </div>
+
+  <ProjectModal />
+</Section>

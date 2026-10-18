@@ -1,0 +1,54 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  variant?: "whatsapp" | "linkedin" | "gmail" | "github" | "custom";
+  customClass?: string;
+  showLabelOnMobile?: boolean;
+}
+
+const {
+  href,
+  label,
+  variant = "custom",
+  customClass = "",
+  showLabelOnMobile = false,
+} = Astro.props;
+
+const variants = {
+  whatsapp:
+    "bg-emerald-400/20 border-emerald-500/30 text-brand-text hover:bg-emerald-400/40",
+  linkedin:
+    "bg-sky-400/20 border-sky-500/30 text-brand-text hover:bg-sky-400/40",
+  gmail:
+    "bg-rose-400/20 border-rose-500/30 text-brand-text hover:bg-rose-400/40",
+  github:
+    "bg-zinc-700/20 dark:bg-zinc-700/90 border-zinc-500/30 text-brand-text hover:bg-zinc-700/60",
+  custom:
+    "bg-brand-surface/20 border-brand-muted/30 text-brand-text hover:border-brand-accent",
+};
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  class:list={[
+    "flex items-center justify-center sm:justify-start gap-3 p-3 sm:px-4 sm:py-3 rounded-xl border transition-all duration-300 shadow-sm cursor-pointer group font-mono",
+    variants[variant],
+    customClass,
+  ]}
+>
+  <div class="w-6 h-6 shrink-0 flex items-center justify-center">
+    <slot name="icon" />
+  </div>
+
+  <span
+    class:list={[
+      "text-sm font-semibold tracking-wide",
+      showLabelOnMobile ? "inline" : "hidden sm:inline",
+    ]}
+  >
+    {label}
+  </span>
+</a>

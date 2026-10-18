@@ -1,0 +1,96 @@
+---
+import Section from "../ui/Section.astro";
+import SkillBadge from "../uiCustom/SkillBadge.astro";
+
+import SeactionHeader from "../ui/SeactionHeader.astro";
+
+import { SKILLS_DATA } from "../../data";
+
+const TABS = [
+  { id: "languages", label: "Languages" },
+  { id: "frontend", label: "Frontend" },
+  { id: "backend", label: "Backend" },
+  { id: "database", label: "Database" },
+  { id: "tools", label: "Tools" },
+] as const;
+---
+
+<Section id="skills">
+  <div class="flex flex-col gap-8 bg-violet-500/0">
+    <!-- Context -->
+    <div class="flex flex-col gap-2 text-center">
+      <SeactionHeader titleKey="skill.title" subtitleKey="skill.description" />
+    </div>
+
+    <!-- TABS -->
+    <div class="flex flex-col gap-6">
+      <div
+        class="flex items-center justify-center gap-4 font-mono text-sm overflow-x-auto pb-2 border-b border-brand-muted/15"
+      >
+        {
+          TABS.map((tab, index) => (
+            <>
+              <button
+                class:list={[
+                  "tab-btn cursor-pointer transition-colors py-1 px-2",
+                  index === 0
+                    ? "text-brand-accent font-semibold"
+                    : "text-brand-muted hover:text-brand-text",
+                ]}
+                data-tab={tab.id}
+              >
+                {tab.label}
+              </button>
+              {index < TABS.length - 1 && (
+                <span class="text-brand-muted/30 select-none">|</span>
+              )}
+            </>
+          ))
+        }
+      </div>
+
+      <div class="min-h-35 flex justify-center">
+        {
+          Object.entries(SKILLS_DATA).map(([category, items], index) => (
+            <div
+              id={`content-${category}`}
+              class:list={[
+                "skill-content flex flex-wrap justify-center gap-4 max-w-6xl w-full transition-all duration-300",
+                index !== 0 && "hidden",
+              ]}
+            >
+              {items.map((skill) => (
+                <SkillBadge name={skill.name} level={skill.level}>
+                  <skill.icon slot="icon" class="w-4 h-4 text-brand-text" />
+                </SkillBadge>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Section>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>(".tab-btn");
+  const contents = document.querySelectorAll<HTMLDivElement>(".skill-content");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.getAttribute("data-tab");
+      if (!target) return;
+
+      tabs.forEach((t) => {
+        const isActive = t === tab;
+        t.classList.toggle("text-brand-accent", isActive);
+        t.classList.toggle("font-semibold", isActive);
+        t.classList.toggle("text-brand-muted", !isActive);
+      });
+
+      contents.forEach((content) => {
+        content.classList.toggle("hidden", content.id !== `content-${target}`);
+      });
+    });
+  });
+</script>

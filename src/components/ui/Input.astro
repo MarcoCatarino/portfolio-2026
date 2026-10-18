@@ -1,0 +1,45 @@
+---
+interface Props {
+  label: string;
+  name: string;
+  type?: "text" | "email" | "tel" | "textarea";
+  placeholder?: string;
+  rows?: number;
+  class?: string;
+}
+
+const {
+  label,
+  name,
+  type = "text",
+  placeholder = "",
+  rows = 4,
+  class: customClass = "",
+} = Astro.props;
+---
+
+<div class={`flex flex-col gap-1.5 w-full font-mono ${customClass}`}>
+  <label for={name} class="text-xs font-semibold text-brand-text tracking-wide">
+    {label}
+  </label>
+
+  {
+    type === "textarea" ? (
+      <textarea
+        id={name}
+        name={name}
+        placeholder={placeholder}
+        rows={rows}
+        class="w-full px-4 py-2.5 rounded-xl border border-brand-muted/20 bg-brand-muted/10 text-brand-text placeholder:text-brand-muted/50 text-xs sm:text-sm focus:outline-none focus:border-brand-accent transition-colors resize-none"
+      />
+    ) : (
+      <input
+        type={type}
+        id={name}
+        name={name}
+        placeholder={placeholder}
+        class="w-full px-4 py-2.5 rounded-xl border border-brand-muted/20 bg-brand-muted/10 text-brand-text placeholder:text-brand-muted/50 text-xs sm:text-sm focus:outline-none focus:border-brand-accent transition-colors"
+      />
+    )
+  }
+</div>

@@ -1,0 +1,20 @@
+---
+import Section from "../ui/Section.astro";
+
+import { translations, defaultLang } from "../../i18n";
+import SeactionHeader from "../ui/SeactionHeader.astro";
+const lang = defaultLang;
+---
+
+<Section id="about-me">
+  <div class="flex flex-col gap-4 text-center mx-auto bg-cyan-600/0">
+    <SeactionHeader titleKey="about.title" align="center" />
+
+    <p
+      data-i18n="about.description"
+      class="text-base text-start text-brand-muted leading-relaxed"
+    >
+      {translations[lang]["about.description"]}
+    </p>
+  </div>
+</Section>

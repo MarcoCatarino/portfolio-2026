@@ -1,0 +1,201 @@
+---
+import ArrowGo from "../../assets/icons/ui/arrowGo.svg";
+
+import Modal from "../ui/Modal.astro";
+
+import { PROJECTS_DATA, SKILLS_DATA } from "../../data";
+import { translations, getT, type Lang } from "../../i18n";
+
+const t = getT();
+const allSkills = Object.values(SKILLS_DATA).flat();
+
+const projectsMap = Object.fromEntries(
+  (Object.keys(translations) as Lang[]).map((lang) => {
+    const tr = getT(lang);
+    return [
+      lang,
+      Object.fromEntries(
+        PROJECTS_DATA.map((p) => [
+          p.id,
+          {
+            title: tr(`project.${p.id}.title`, p.id),
+            description: tr(`project.${p.id}.desc`),
+            image: p.image,
+            link: p.link ?? "",
+            github: p.github ?? "",
+          },
+        ]),
+      ),
+    ];
+  }),
+);
+
+const json = JSON.stringify(projectsMap).replace(/</g, "\\u003c");
+
+const stacks = PROJECTS_DATA.map((p) => ({
+  id: p.id,
+  skills: p.tags.flatMap((tag) => {
+    const skill = allSkills.find((s) => s.id === tag);
+    return skill ? [skill] : [];
+  }),
+}));
+---
+
+<Modal id="project-modal">
+  <div slot="header" class="flex flex-col gap-1 w-full">
+    <h3
+      id="project-modal-title"
+      class="text-xl md:text-2xl font-extrabold tracking-tight text-brand-text"
+    >
+    </h3>
+  </div>
+
+  <div slot="content" class="flex flex-col gap-5">
+    <div
+      class="w-full aspect-video rounded-xl overflow-hidden border border-brand-muted/15 bg-brand-muted/10"
+    >
+      <img
+        id="project-modal-image"
+        src=""
+        alt=""
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <p
+      id="project-modal-desc"
+      class="text-xs sm:text-sm text-brand-muted leading-relaxed"
+    >
+    </p>
+
+    <div class="flex flex-col gap-2 border-t border-brand-muted/15 pt-4">
+      <h4
+        data-i18n="project.card.stack"
+        class="text-xs uppercase font-semibold tracking-wider text-brand-muted"
+      >
+        {t("project.card.stack", "Stack")}
+      </h4>
+
+      {
+        stacks.map(({ id, skills }) => (
+          <div
+            data-project-stack={id}
+            class="hidden items-center gap-1.5 flex-wrap"
+          >
+            {skills.map((skill) => (
+              <div
+                title={skill.name}
+                class="w-7 h-7 rounded-full bg-[#F5F2EB] dark:bg-[#2A2725] flex items-center justify-center border border-brand-muted/20 shadow-2xs shrink-0"
+              >
+                <skill.icon class="w-3.5 h-3.5 text-brand-text" />
+              </div>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <a
+        id="project-modal-link"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-accent text-brand-bg font-bold text-xs hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+      >
+        <span data-i18n="project.card.go"
+          >{t("project.card.go", "Ir al proyecto")}</span
+        >
+        <ArrowGo />
+      </a>
+
+      <a
+        id="project-modal-github"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hidden items-center gap-2 px-4 py-2 rounded-lg bg-brand-muted/10 hover:bg-brand-muted/20 text-brand-text font-semibold text-xs border border-brand-muted/20 transition-colors cursor-pointer"
+      >
+        <span data-i18n="project.modal.repo"
+          >{t("project.modal.repo", "Repositorio")}</span
+        >
+      </a>
+    </div>
+  </div>
+</Modal>
+
+<script
+  is:inline
+  type="application/json"
+  id="project-modal-data"
+  set:html={json}
+/>
+
+<script>
+  type ProjectInfo = {
+    title: string;
+    description: string;
+    image: string;
+    link: string;
+    github: string;
+  };
+  type ProjectsMap = Record<string, Record<string, ProjectInfo>>;
+
+  const modal = document.getElementById(
+    "project-modal",
+  ) as HTMLDialogElement | null;
+  const data: ProjectsMap = JSON.parse(
+    document.getElementById("project-modal-data")?.textContent ?? "{}",
+  );
+
+  const modalTitle = document.getElementById(
+    "project-modal-title",
+  ) as HTMLHeadingElement;
+  const modalDesc = document.getElementById(
+    "project-modal-desc",
+  ) as HTMLParagraphElement;
+  const modalImage = document.getElementById(
+    "project-modal-image",
+  ) as HTMLImageElement;
+  const modalLink = document.getElementById(
+    "project-modal-link",
+  ) as HTMLAnchorElement;
+  const modalGithub = document.getElementById(
+    "project-modal-github",
+  ) as HTMLAnchorElement;
+
+  const getLang = () =>
+    localStorage.getItem("preferred_lang") === "en" ? "en" : "es";
+
+  // Delegación: cualquier elemento con data-project-open="<id>" abre el modal
+  document.addEventListener("click", (e) => {
+    const trigger = (e.target as HTMLElement).closest<HTMLElement>(
+      "[data-project-open]",
+    );
+    if (!trigger || !modal) return;
+
+    const id = trigger.dataset.projectOpen;
+    const info = id ? data[getLang()]?.[id] : undefined;
+    if (!id || !info) return;
+
+    modalTitle.textContent = info.title;
+    modalDesc.textContent = info.description;
+    modalImage.src = info.image;
+    modalImage.alt = info.title;
+    modalLink.href = info.link || "#";
+
+    modalGithub.href = info.github || "#";
+    modalGithub.classList.toggle("hidden", !info.github);
+    modalGithub.classList.toggle("inline-flex", !!info.github);
+
+    document
+      .querySelectorAll<HTMLElement>("[data-project-stack]")
+      .forEach((el) => {
+        const match = el.dataset.projectStack === id;
+        el.classList.toggle("hidden", !match);
+        el.classList.toggle("flex", match);
+      });
+
+    modal.showModal();
+  });
+</script>

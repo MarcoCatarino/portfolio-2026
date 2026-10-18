@@ -1,0 +1,66 @@
+---
+import { translations, defaultLang } from "../../i18n";
+
+interface Props {
+  id: string;
+  avatar: string;
+  yOffset: "top" | "bottom";
+}
+
+const { id, avatar, yOffset } = Astro.props;
+const trans = translations[defaultLang];
+
+const titleKey = `road.${id}.title`;
+const taglineKey = `road.${id}.tagline`;
+
+const title = (trans[titleKey as keyof typeof trans] as string) || id;
+const tagline = (trans[taglineKey as keyof typeof trans] as string) || "";
+---
+
+<div
+  class:list={[
+    "flex flex-col items-center text-center font-mono w-40 sm:w-48 z-10 transition-transform duration-300",
+    yOffset === "top" ? "mb-16 md:mb-24" : "mt-16 md:mt-24",
+  ]}
+>
+  <div class="w-24 h-32 mb-2 flex items-end justify-center">
+    <img
+      src={avatar}
+      alt={title}
+      class="max-h-full object-contain drop-shadow-md pointer-events-none"
+    />
+  </div>
+
+  <button
+    type="button"
+    data-road-id={id}
+    class="road-node-btn relative w-12 h-12 flex items-center justify-center cursor-pointer transition-transform hover:scale-110 focus:outline-none group"
+    aria-label={title}
+  >
+    <img
+      src="/images/buttonUp.webp"
+      alt=""
+      class="level-icon-default w-full h-full object-contain group-hover:brightness-110 transition-all"
+    />
+    <img
+      src="/images/buttonDown.webp"
+      alt=""
+      class="level-icon-active hidden w-full h-full object-contain transition-all"
+    />
+  </button>
+
+  <div class="mt-3 flex flex-col gap-1">
+    <h3
+      data-i18n={titleKey}
+      class="font-extrabold text-sm sm:text-base text-brand-text tracking-tight"
+    >
+      {title}
+    </h3>
+    <p
+      data-i18n={taglineKey}
+      class="text-[11px] sm:text-xs text-brand-muted leading-tight font-medium max-w-40 mx-auto"
+    >
+      {tagline}
+    </p>
+  </div>
+</div>

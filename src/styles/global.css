@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 105s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+@theme {
+  --font-mono:
+    var(--font-ibm-plex), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+
+  --color-brand-bg: #f8fafc; /**Background color*/
+  --color-brand-surface: #ffffff; /**Cards backgrounds*/
+  --color-brand-text: #0f172a; /**Principal text*/
+  --color-brand-muted: #64748b; /**Secondary text*/
+  --color-brand-accent: #0ea5e9; /**Accent*/
+}
+
+.dark {
+  --color-brand-bg: #090d16; /**Background color*/
+  --color-brand-surface: #111827; /**Cards backgrounds*/
+  --color-brand-text: #f3f4f6; /**Principal text*/
+  --color-brand-muted: #9ca3af; /**Secondary text*/
+  --color-brand-accent: #38bdf8; /**Accent*/
+}
+
+body {
+  font-family: var(--font-mono);
+  background-color: var(--color-brand-bg);
+  color: var(--color-brand-text);
+  transition:
+    background-color 0.3s ease,
+    color 0.3 ease;
+  margin: 0;
+  padding: 0;
+}

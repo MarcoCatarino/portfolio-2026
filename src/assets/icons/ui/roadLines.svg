@@ -1,0 +1,14 @@
+<svg
+    class="absolute inset-0 w-full h-full pointer-events-none z-0"
+    viewBox="0 0 1000 360"
+    preserveAspectRatio="none"
+    fill="none"
+>
+    <path
+        d="M 100,130 C 180,290 220,290 300,290 C 380,290 420,130 500,130 C 580,130 620,290 700,290 C 780,290 820,130 900,130"
+        stroke="currentColor"
+        class="text-brand-muted/40"
+        stroke-width="2.5"
+        stroke-dasharray="6,6"
+        stroke-linecap="round"></path>
+</svg>
