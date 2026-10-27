@@ -1,4 +1,8 @@
 ---
+import { getT } from "../../i18n";
+
+const t = getT();
+
 import Section from "../ui/Section.astro";
 import FormInput from "../ui/Input.astro";
 import SocialButton from "../uiCustom/SocialButton.astro";
@@ -10,6 +14,16 @@ import LinkedinIcon from "../../assets/icons/social/linkedIn.svg";
 import GmailIcon from "../../assets/icons/social/mail.svg";
 import GithubIcon from "../../assets/icons/social/github.svg";
 import SeactionHeader from "../ui/SeactionHeader.astro";
+
+const WHATSAPP_NUMBER = "529984879923";
+const EMAIL = "marco.arturo.hdz.c@gmail.com";
+
+const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  "Hi Marco, I just saw your portfolio.",
+)}`;
+const mailUrl = `mailto:${EMAIL}?subject=${encodeURIComponent(
+  "I just viewed your portfolio.",
+)}`;
 ---
 
 <Section id="contact">
@@ -17,7 +31,25 @@ import SeactionHeader from "../ui/SeactionHeader.astro";
     <div
       class="p-6 sm:p-8 rounded-3xl border border-brand-muted/20 bg-brand-surface/60 backdrop-blur-sm shadow-xl flex flex-col lg:flex-row gap-8 items-stretch justify-between"
     >
-      <form class="flex-1 flex flex-col gap-5">
+      <form
+        id="contact-form"
+        name="contact"
+        method="POST"
+        data-netlify="true"
+        data-netlify-honeypot="bot-field"
+        class="flex-1 flex flex-col gap-5"
+      >
+        <!-- Bot Shield -->
+        <p class="hidden" aria-hidden="true">
+          <label
+            >No llenar: <input
+              name="bot-field"
+              tabindex="-1"
+              autocomplete="off"
+            /></label
+          >
+        </p>
+
         <SeactionHeader titleKey="contact.title" align="left" />
 
         <FormInput label="Name" name="name" placeholder="Name" />
@@ -46,11 +78,29 @@ import SeactionHeader from "../ui/SeactionHeader.astro";
         />
 
         <button
+          id="contact-submit"
           type="submit"
           class="mt-2 py-3 px-6 rounded-xl bg-brand-accent text-brand-bg font-bold text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-sm w-full sm:w-auto self-start"
         >
           Send Message
         </button>
+
+        <p
+          id="contact-success"
+          role="status"
+          data-i18n="contact.success"
+          class="hidden text-xs text-emerald-400"
+        >
+          {t("contact.success", "¡Mensaje enviado! Te responderé pronto.")}
+        </p>
+        <p
+          id="contact-error"
+          role="alert"
+          data-i18n="contact.error"
+          class="hidden text-xs text-rose-400"
+        >
+          {t("contact.error", "No se pudo enviar. Intenta de nuevo.")}
+        </p>
       </form>
 
       <div
@@ -67,11 +117,7 @@ import SeactionHeader from "../ui/SeactionHeader.astro";
         </div>
 
         <div class="flex flex-row lg:flex-col gap-3 w-full justify-center">
-          <SocialButton
-            href="https://wa.me/"
-            label="Whatsapp"
-            variant="whatsapp"
-          >
+          <SocialButton href={whatsappUrl} label="Whatsapp" variant="whatsapp">
             <WhatsappIcon slot="icon" class="w-5 h-5 text-emerald-400" />
           </SocialButton>
 
@@ -83,11 +129,7 @@ import SeactionHeader from "../ui/SeactionHeader.astro";
             <LinkedinIcon slot="icon" class="w-5 h-5 text-sky-400" />
           </SocialButton>
 
-          <SocialButton
-            href="marco.arturo.hdz.c@mail.com"
-            label="Gmail"
-            variant="gmail"
-          >
+          <SocialButton href={mailUrl} label="Gmail" variant="gmail">
             <GmailIcon slot="icon" class="w-5 h-5 text-rose-400" />
           </SocialButton>
 
@@ -103,3 +145,61 @@ import SeactionHeader from "../ui/SeactionHeader.astro";
     </div>
   </div>
 </Section>
+
+<script>
+  const MIN_FILL_MS = 3000;
+  const COOLDOWN_MS = 60_000;
+  const loadedAt = Date.now();
+
+  const form = document.getElementById(
+    "contact-form",
+  ) as HTMLFormElement | null;
+  const submitBtn = document.getElementById(
+    "contact-submit",
+  ) as HTMLButtonElement | null;
+  const success = document.getElementById("contact-success");
+  const error = document.getElementById("contact-error");
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      success?.classList.add("hidden");
+      error?.classList.add("hidden");
+
+      if (Date.now() - loadedAt < MIN_FILL_MS) {
+        success?.classList.remove("hidden");
+        return;
+      }
+
+      const last = Number(localStorage.getItem("contact_last_sent") ?? 0);
+      if (Date.now() - last < COOLDOWN_MS) {
+        error?.classList.remove("hidden");
+        return;
+      }
+
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const body = new URLSearchParams(
+          new FormData(form) as unknown as Record<string, string>,
+        ).toString();
+
+        const res = await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body,
+        });
+
+        if (!res.ok) throw new Error("Request failed");
+
+        localStorage.setItem("contact_last_sent", String(Date.now()));
+        form.reset();
+        success?.classList.remove("hidden");
+      } catch {
+        error?.classList.remove("hidden");
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  }
+</script>
