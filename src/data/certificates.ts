@@ -7,31 +7,29 @@ export interface Certificate {
 
 export const CERTIFICATES_DATA: Certificate[] = [
   {
-    id: "awsDev",
+    id: "react",
     date: "2025",
+    image: "/images/certificates/Certificate_HolaMundo_React.webp",
+    verifyUrl: "https://academia.holamundo.io/certificates/ny73gx1aik",
+  },
+  {
+    id: "cibersecurityFundamentals",
+    date: "October 2026",
     image:
-      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600&auto=format&fit=crop",
+      "/images/certificates/Certificate_Santander-IBM_CibersecurityFundaments.webp",
     verifyUrl: "#",
   },
   {
-    id: "reactAdv",
-    date: "2024",
+    id: "promptingResponsable",
+    date: "October 2026",
     image:
-      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=600&auto=format&fit=crop",
+      "/images/certificates/Certificate_Santander-Microsoft_PromptingResponsable.webp",
     verifyUrl: "#",
   },
-  {
-    id: "awsDevs",
-    date: "2025",
-    image:
-      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600&auto=format&fit=crop",
-    verifyUrl: "#",
-  },
-  {
-    id: "reactAdvs",
-    date: "2024",
-    image:
-      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=600&auto=format&fit=crop",
-    verifyUrl: "#",
-  },
+  // {
+  //   id: "QUIT",
+  //   date: "Label 0000",
+  //   image: "/images/certificates/",
+  //   verifyUrl: "#",
+  // },
 ];

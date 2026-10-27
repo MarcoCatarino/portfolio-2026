@@ -71,17 +71,21 @@ const { id, scrollAmount = 320, autoPlayInterval } = Astro.props;
       resetAutoPlay();
     });
 
+    const isPaused = () =>
+      document.hidden || !!document.querySelector("dialog[open]");
+
     const startAutoPlay = () => {
-      autoPlayTimer = setInterval(scrollNext, autoPlayInterval);
+      clearInterval(autoPlayTimer);
+      if (!autoPlayInterval) return;
+      autoPlayTimer = setInterval(() => {
+        if (!isPaused()) scrollNext();
+      }, autoPlayInterval);
     };
 
-    const resetAutoPlay = () => {
-      clearInterval(autoPlayTimer);
-      startAutoPlay();
-    };
+    const resetAutoPlay = startAutoPlay;
 
     track.addEventListener("mouseenter", () => clearInterval(autoPlayTimer));
-    track.addEventListener("mouseleave", () => startAutoPlay());
+    track.addEventListener("mouseleave", startAutoPlay);
     startAutoPlay();
   }
 </script>

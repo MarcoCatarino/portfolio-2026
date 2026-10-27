@@ -1,4 +1,3 @@
-// src/i18n/index.ts
 import { NavLabels } from "./ui";
 import { heroData } from "./hero";
 import { skillsData } from "./skills";

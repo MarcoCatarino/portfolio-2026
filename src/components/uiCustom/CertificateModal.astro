@@ -1,0 +1,178 @@
+---
+import Modal from "../ui/Modal.astro";
+
+import { CERTIFICATES_DATA } from "../../data";
+import { translations, getT, type Lang } from "../../i18n";
+
+import CrossMark from "../../assets/icons/ui/crossMark.svg";
+
+const t = getT();
+
+const certificatesMap = Object.fromEntries(
+  (Object.keys(translations) as Lang[]).map((lang) => {
+    const tr = getT(lang);
+    return [
+      lang,
+      Object.fromEntries(
+        CERTIFICATES_DATA.map((cert) => [
+          cert.id,
+          {
+            title: tr(`cert.${cert.id}.title`, cert.id),
+            issuer: tr(`cert.${cert.id}.issuer`, "Company"),
+            date: tr(`cert.${cert.id}.date`, cert.date),
+            details: tr(`cert.${cert.id}.details`),
+            image: cert.image,
+            verifyUrl: cert.verifyUrl,
+          },
+        ]),
+      ),
+    ];
+  }),
+);
+
+const json = JSON.stringify(certificatesMap).replace(/</g, "\\u003c");
+---
+
+<Modal id="cert-modal" size="xl">
+  <CrossMark />
+  <!-- Image Certificate -->
+  <div slot="media" class="flex justify-center">
+    <img
+      id="cert-modal-image"
+      alt=""
+      class="block w-auto max-w-full max-h-[50vh] rounded-lg border border-brand-muted/20 shadow-sm"
+    />
+  </div>
+
+  <div slot="header" class="flex flex-col gap-1 w-full">
+    <!-- Name Course -->
+    <h3
+      id="cert-modal-title"
+      class="text-xl md:text-2xl font-extrabold tracking-tight text-brand-text"
+    >
+    </h3>
+  </div>
+
+  <div slot="content" class="flex flex-col gap-6">
+    <div
+      class="flex items-center justify-between text-sm md:text-md text-brand-muted"
+    >
+      <!-- Company -->
+      <span id="cert-modal-company" class="font-semibold text-brand-accent"
+      ></span>
+
+      <!-- Date -->
+      <span id="cert-modal-date"></span>
+    </div>
+  </div>
+
+  <div slot="content" class="flex flex-col gap-6">
+    <div id="cert-modal-link-wrap" class="hidden">
+      <!-- Link References -->
+      <a
+        id="cert-modal-link"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-accent text-brand-bg font-bold text-xs hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+      >
+        <span data-i18n="cert.modal.verify">
+          {t("cert.modal.verify", "View Credential")}
+        </span>
+      </a>
+    </div>
+
+    <div class="flex flex-col gap-2 border-t border-brand-muted/45 pt-2">
+      <!-- Details Label -->
+      <h4
+        data-i18n="cert.modal.details"
+        class="text-md md:text-lg uppercase font-semibold tracking-wider text-brand-muted"
+      >
+        {t("cert.modal.details", "Details")}
+      </h4>
+      <!-- Detasils Content -->
+      <p
+        id="cert-modal-details"
+        class="text-sm md:text-md text-brand-text leading-relaxed"
+      >
+      </p>
+    </div>
+  </div>
+</Modal>
+
+<script
+  is:inline
+  type="application/json"
+  id="cert-modal-data"
+  set:html={json}
+/>
+
+<script>
+  type CertInfo = {
+    title: string;
+    issuer: string;
+    date: string;
+    details: string;
+    image: string;
+    verifyUrl: string;
+  };
+  type CertsMap = Record<string, Record<string, CertInfo>>;
+
+  const modal = document.getElementById(
+    "cert-modal",
+  ) as HTMLDialogElement | null;
+  const data: CertsMap = JSON.parse(
+    document.getElementById("cert-modal-data")?.textContent ?? "{}",
+  );
+
+  const modalImage = document.getElementById(
+    "cert-modal-image",
+  ) as HTMLImageElement;
+  const modalTitle = document.getElementById(
+    "cert-modal-title",
+  ) as HTMLHeadingElement;
+  const modalCompany = document.getElementById(
+    "cert-modal-company",
+  ) as HTMLSpanElement;
+  const modalDate = document.getElementById(
+    "cert-modal-date",
+  ) as HTMLSpanElement;
+  const modalDetails = document.getElementById(
+    "cert-modal-details",
+  ) as HTMLParagraphElement;
+  const modalLink = document.getElementById(
+    "cert-modal-link",
+  ) as HTMLAnchorElement;
+  const modalLinkWrap = document.getElementById(
+    "cert-modal-link-wrap",
+  ) as HTMLDivElement;
+
+  const getLang = () =>
+    localStorage.getItem("preferred_lang") === "en" ? "en" : "es";
+
+  // Delegación: cualquier elemento con data-cert-id abre el modal
+  document.addEventListener("click", (e) => {
+    const trigger = (e.target as HTMLElement).closest<HTMLElement>(
+      "[data-cert-id]",
+    );
+    if (!trigger || !modal) return;
+
+    const id = trigger.dataset.certId;
+    const info = id ? data[getLang()]?.[id] : undefined;
+    if (!info) return;
+
+    modalImage.src = info.image;
+    modalImage.alt = info.title;
+    modalTitle.textContent = info.title;
+    modalCompany.textContent = info.issuer;
+    modalDate.textContent = info.date;
+    modalDetails.textContent = info.details;
+
+    // Solo muestra el botón si hay un link real
+    const hasLink = !!info.verifyUrl && info.verifyUrl !== "#";
+    modalLink.href = hasLink ? info.verifyUrl : "#";
+    modalLinkWrap.classList.toggle("hidden", !hasLink);
+
+    modal.showModal();
+  });
+</script>

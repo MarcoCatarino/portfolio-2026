@@ -1,47 +1,19 @@
 ---
 import Section from "../ui/Section.astro";
 import Carousel from "../ui/Carousel.astro";
-import Modal from "../ui/Modal.astro";
-
-import CertificateCard from "../uiCustom/CertificateCard.astro";
-
-import { CERTIFICATES_DATA } from "../../data";
-import { translations, defaultLang } from "../../i18n";
 import SeactionHeader from "../ui/SeactionHeader.astro";
 
-type Lang = keyof typeof translations;
+import CertificateCard from "../uiCustom/CertificateCard.astro";
+import CertificateModal from "../uiCustom/CertificateModal.astro";
 
-const makeT = (lang: Lang) => {
-  const dict = translations[lang] as Record<string, unknown>;
-  return (key: string, fallback = ""): string => {
-    const value = dict[key];
-    return typeof value === "string" ? value : fallback;
-  };
-};
+import { CERTIFICATES_DATA } from "../../data";
+import { getT } from "../../i18n";
 
-const t = makeT(defaultLang);
-
-const certificatesMap = Object.fromEntries(
-  (Object.keys(translations) as Lang[]).map((lang) => {
-    const tr = makeT(lang);
-    return [
-      lang,
-      CERTIFICATES_DATA.map((cert) => ({
-        id: cert.id,
-        title: tr(`cert.${cert.id}.title`, cert.id),
-        issuer: tr(`cert.${cert.id}.issuer`, "Company"),
-        date: tr(`cert.${cert.id}.date`, cert.date),
-        details: tr(`cert.${cert.id}.details`),
-        verifyUrl: cert.verifyUrl,
-      })),
-    ];
-  }),
-);
+const t = getT();
 ---
 
 <Section id="certificates">
   <div class="flex flex-col gap-8">
-    <!-- Encabezado -->
     <div class="flex flex-col gap-2 text-center md:text-left">
       <SeactionHeader titleKey="cert.title" subtitleKey="cert.subtitle" />
     </div>
@@ -65,110 +37,5 @@ const certificatesMap = Object.fromEntries(
     </Carousel>
   </div>
 
-  <Modal id="cert-modal">
-    <div slot="header" class="flex flex-col gap-1 w-full">
-      <h3
-        id="modal-title"
-        class="text-xl md:text-2xl font-extrabold tracking-tight text-brand-text"
-      >
-        Name_Course
-      </h3>
-      <div
-        class="flex items-center justify-between text-xs text-brand-muted pt-1"
-      >
-        <span id="modal-company" class="font-semibold text-brand-accent"
-          >Name_Company</span
-        >
-        <span id="modal-date">May 2026</span>
-      </div>
-    </div>
-
-    <div slot="content" class="flex flex-col gap-6">
-      <div>
-        <a
-          id="modal-link"
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-accent text-brand-bg font-bold text-xs hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
-        >
-          <span data-i18n="cert.modal.verify"
-            >{t("cert.modal.verify", "View Credential")}</span
-          >
-
-          <svg
-            class="w-3.5 h-3.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2.5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
-          </svg>
-        </a>
-      </div>
-
-      <div class="flex flex-col gap-2 border-t border-brand-muted/15 pt-4">
-        <h4
-          data-i18n="cert.modal.details"
-          class="text-xs uppercase font-semibold tracking-wider text-brand-muted"
-        >
-          {t("cert.modal.details", "Details")}
-        </h4>
-        <p
-          id="modal-details"
-          class="text-xs sm:text-sm text-brand-muted leading-relaxed"
-        >
-          Descripción detallada del certificado...
-        </p>
-      </div>
-    </div>
-  </Modal>
+  <CertificateModal />
 </Section>
-
-<script is:inline define:vars={{ certificatesMap }}>
-  window.__CERTIFICATES_DATA__ = certificatesMap;
-</script>
-
-<script>
-  const certButtons =
-    document.querySelectorAll<HTMLButtonElement>(".cert-card-btn");
-  const modal = document.getElementById("cert-modal") as HTMLDialogElement;
-
-  const modalTitle = document.getElementById(
-    "modal-title",
-  ) as HTMLHeadingElement;
-  const modalCompany = document.getElementById(
-    "modal-company",
-  ) as HTMLSpanElement;
-  const modalDate = document.getElementById("modal-date") as HTMLSpanElement;
-  const modalDetails = document.getElementById(
-    "modal-details",
-  ) as HTMLParagraphElement;
-  const modalLink = document.getElementById("modal-link") as HTMLAnchorElement;
-
-  const getLang = () =>
-    localStorage.getItem("preferred_lang") === "en" ? "en" : "es";
-
-  certButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const certId = btn.getAttribute("data-cert-id");
-      const all = (window as any).__CERTIFICATES_DATA__ || {};
-      const list: any[] = all[getLang()] || [];
-      const certData = list.find((item) => item.id === certId);
-
-      if (certData && modal) {
-        modalTitle.textContent = certData.title;
-        modalCompany.textContent = certData.issuer;
-        modalDate.textContent = certData.date;
-        modalDetails.textContent = certData.details;
-        modalLink.href = certData.verifyUrl;
-
-        modal.showModal();
-      }
-    });
-  });
-</script>
