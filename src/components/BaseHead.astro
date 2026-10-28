@@ -39,7 +39,7 @@ const resolvedImageURL = new URL(image.src, siteURL);
 <meta name="generator" content={Astro.generator} />
 
 <!-- Typography -->
-<Font cssVariable="--font-ibm-plex" preload />
+<Font cssVariable="--font-ibm-plex" preload={[{ weight: 400 }]} />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
