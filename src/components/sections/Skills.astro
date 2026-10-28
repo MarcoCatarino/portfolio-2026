@@ -61,7 +61,7 @@ const TABS = [
             ]}
           >
             {SKILLS_DATA[tab.id].map((skill) => (
-              <div class="flex justify-center w-full sm:w-[calc((100%-1rem)/2)] md:w-[calc((100%-2rem)/3)] *:w-full *:max-w-md">
+              <div class="flex justify-center w-full sm:w-[calc((100%-1rem)/2)] md:w-[calc((100%-2rem)/3)] *:w-full *:max-w-md cursor-pointer select-none">
                 <SkillBadge name={skill.name} level={skill.level}>
                   <skill.icon slot="icon" class="w-4 h-4 text-brand-text" />
                 </SkillBadge>

@@ -23,7 +23,9 @@ const tagline = (trans[taglineKey as keyof typeof trans] as string) || "";
     yOffset === "top" ? "mb-16 md:mb-24" : "mt-16 md:mt-24",
   ]}
 >
-  <div class="w-24 h-32 mb-2 flex items-end justify-center">
+  <div
+    class="w-24 h-32 mb-2 flex items-end justify-center cursor-pointer select-none"
+  >
     <img
       src={avatar}
       alt={title}
@@ -42,6 +44,7 @@ const tagline = (trans[taglineKey as keyof typeof trans] as string) || "";
       alt=""
       class="level-icon-default w-full h-full object-contain group-hover:brightness-110 transition-all"
     />
+
     <img
       src="/images/buttonDown.webp"
       alt=""
