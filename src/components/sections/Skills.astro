@@ -23,16 +23,16 @@ const TABS = [
     </div>
 
     <!-- TABS -->
-    <div class="flex flex-col gap-6">
+    <div class="border-b border-brand-muted/15 overflow-x-auto no-scrollbar">
       <div
-        class="flex items-center justify-center gap-4 font-mono text-sm overflow-x-auto pb-2 border-b border-brand-muted/15"
+        class="flex items-center gap-2 sm:gap-4 w-max mx-auto font-mono text-xs sm:text-sm pb-2"
       >
         {
           TABS.map((tab, index) => (
             <>
               <button
                 class:list={[
-                  "tab-btn cursor-pointer transition-colors py-1 px-2",
+                  "tab-btn shrink-0 whitespace-nowrap cursor-pointer transition-colors py-1 px-2",
                   index === 0
                     ? "text-brand-accent font-semibold"
                     : "text-brand-muted hover:text-brand-text",
@@ -48,26 +48,28 @@ const TABS = [
           ))
         }
       </div>
+    </div>
 
-      <div class="min-h-35 flex justify-center">
-        {
-          Object.entries(SKILLS_DATA).map(([category, items], index) => (
-            <div
-              id={`content-${category}`}
-              class:list={[
-                "skill-content flex flex-wrap justify-center gap-4 max-w-6xl w-full transition-all duration-300",
-                index !== 0 && "hidden",
-              ]}
-            >
-              {items.map((skill) => (
+    <div class="grid">
+      {
+        TABS.map((tab, index) => (
+          <div
+            id={`content-${tab.id}`}
+            class:list={[
+              "skill-content col-start-1 row-start-1 flex flex-wrap content-start justify-center justify-self-center gap-4 max-w-6xl w-full transition-all duration-300",
+              index !== 0 && "invisible opacity-0",
+            ]}
+          >
+            {SKILLS_DATA[tab.id].map((skill) => (
+              <div class="w-full sm:w-[calc((100%-1rem)/2)] md:w-[calc((100%-2rem)/3)] *:w-full">
                 <SkillBadge name={skill.name} level={skill.level}>
                   <skill.icon slot="icon" class="w-4 h-4 text-brand-text" />
                 </SkillBadge>
-              ))}
-            </div>
-          ))
-        }
-      </div>
+              </div>
+            ))}
+          </div>
+        ))
+      }
     </div>
   </div>
 </Section>
@@ -81,6 +83,12 @@ const TABS = [
       const target = tab.getAttribute("data-tab");
       if (!target) return;
 
+      tab.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+
       tabs.forEach((t) => {
         const isActive = t === tab;
         t.classList.toggle("text-brand-accent", isActive);
@@ -89,7 +97,9 @@ const TABS = [
       });
 
       contents.forEach((content) => {
-        content.classList.toggle("hidden", content.id !== `content-${target}`);
+        const isActive = content.id === `content-${target}`;
+        content.classList.toggle("invisible", !isActive);
+        content.classList.toggle("opacity-0", !isActive);
       });
     });
   });
