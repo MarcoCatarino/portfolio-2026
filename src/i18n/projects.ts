@@ -9,21 +9,24 @@ export const projectsData = {
     "project.card.details": "Ver detalles",
     "project.modal.repo": "Repositorio",
 
+    // Project 1
     "project.upqrooIntranet.title": "UPQROO Intranet",
     "project.upqrooIntranet.desc":
       "Sistema intranet para gestión documental con control de acceso basado en roles, auditoría y versionado de documentos.",
 
+    // Project 2
     "project.portfolioAstro.title": "Portafolio Personal",
     "project.portfolioAstro.desc":
       "Portafolio web personal de alto rendimiento construido con Astro v7, Tailwind CSS v4 y TypeScript.",
 
+    // Project 3
     "project.portfolioNext.title": "Portafolio Personal",
     "project.portfolioNext.desc":
       "Portafolio web personal de alto rendimiento construido con Astro v7, Tailwind CSS v4 y TypeScript.",
 
-    "project.portfolioReact.title": "Portafolio Personal",
-    "project.portfolioReact.desc":
-      "Portafolio web personal de alto rendimiento construido con Astro v7, Tailwind CSS v4 y TypeScript.",
+    // Project 4
+    // "project._.title": "Lorem",
+    // "project._.desc": "Lorem",
   },
   en: {
     "project.title": "Featured Projects",
@@ -34,20 +37,23 @@ export const projectsData = {
     "project.card.details": "View details",
     "project.modal.repo": "Repository",
 
+    // Project 1
     "project.upqrooIntranet.title": "UPQROO Intranet",
     "project.upqrooIntranet.desc":
       "Intranet document management system featuring role-based access control, auditing, and document versioning.",
 
+    // Project 2
     "project.portfolioAstro.title": "Personal Portfolio",
     "project.portfolioAstro.desc":
       "High-performance personal web portfolio built with Astro v7, Tailwind CSS v4, and TypeScript.",
 
+    // Project 3
     "project.portfolioNext.title": "Personal Portfolio",
     "project.portfolioNext.desc":
       "High-performance personal web portfolio built with Astro v7, Tailwind CSS v4, and TypeScript.",
 
-    "project.portfolioReact.title": "Personal Portfolio",
-    "project.portfolioReact.desc":
-      "High-performance personal web portfolio built with Astro v7, Tailwind CSS v4, and TypeScript.",
+    // Project 4
+    // "project._.title": "Lorem",
+    // "project._.desc": "Lorem",
   },
 };

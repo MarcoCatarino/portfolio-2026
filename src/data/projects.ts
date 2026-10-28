@@ -29,11 +29,11 @@ export const PROJECTS_DATA: Project[] = [
     tags: ["astro", "typescript", "tailwindcss", "git"],
     link: "#",
   },
-  {
-    id: "portfolioReact",
-    image:
-      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=600&auto=format&fit=crop",
-    tags: ["astro", "typescript", "tailwindcss", "git"],
-    link: "#",
-  },
+  // {
+  //   id: "_",
+  //   image:
+  //     "/images/projects/",
+  //   tags: ["astro", "typescript", "tailwindcss", "git"],
+  //   link: "#",
+  // },
 ];
