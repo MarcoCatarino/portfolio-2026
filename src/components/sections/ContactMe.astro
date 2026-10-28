@@ -15,7 +15,7 @@ import GmailIcon from "../../assets/icons/social/mail.svg";
 import GithubIcon from "../../assets/icons/social/github.svg";
 import SeactionHeader from "../ui/SeactionHeader.astro";
 
-const WHATSAPP_NUMBER = "529984879923";
+const WHATSAPP_NUMBER = "9984879923";
 const EMAIL = "marco.arturo.hdz.c@gmail.com";
 
 const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -104,11 +104,12 @@ const mailUrl = `mailto:${EMAIL}?subject=${encodeURIComponent(
       </form>
 
       <div
-        class="flex flex-col items-center justify-between gap-6 lg:w-56 shrink-0 pt-4 lg:pt-0 border-t lg:border-t-0 lg:border-l border-brand-muted/15 lg:pl-8"
+        class="flex flex-col items-center gap-6 lg:justify-end lg:gap-8 lg:w-56 shrink-0 lg:border-l border-brand-muted/15 lg:pl-8"
       >
         <div
-          class="hidden md:flex w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border-2 border-brand-muted/20 bg-brand-muted/10 shadow-md items-center justify-center"
+          class="hidden md:flex w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden items-center justify-center"
         >
+          <!-- Image Myself -->
           <img
             src={mySelf.src}
             alt="Marco Arturo"
@@ -116,7 +117,8 @@ const mailUrl = `mailto:${EMAIL}?subject=${encodeURIComponent(
           />
         </div>
 
-        <div class="flex flex-row lg:flex-col gap-3 w-full justify-center">
+        <!-- Contact Buttons -->
+        <div class="flex flex-row lg:flex-col gap-4 w-full justify-center">
           <SocialButton href={whatsappUrl} label="Whatsapp" variant="whatsapp">
             <WhatsappIcon slot="icon" class="w-5 h-5 text-emerald-400" />
           </SocialButton>
