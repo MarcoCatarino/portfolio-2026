@@ -17,7 +17,7 @@ const t = getT();
       <SeactionHeader titleKey="project.title" subtitleKey="project.subtitle" />
     </div>
 
-    <Carousel id="projects-carousel" scrollAmount={520} autoPlayInterval={2500}>
+    <Carousel id="projects-carousel" scrollAmount={520} autoPlayInterval={2000}>
       {
         PROJECTS_DATA.map((project) => {
           const titleKey = `project.${project.id}.title`;

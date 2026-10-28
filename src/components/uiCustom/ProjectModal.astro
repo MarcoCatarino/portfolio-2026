@@ -41,8 +41,9 @@ const stacks = PROJECTS_DATA.map((p) => ({
 }));
 ---
 
-<Modal id="project-modal">
+<Modal id="project-modal" size="lg">
   <div slot="header" class="flex flex-col gap-1 w-full">
+    <!-- Title - Name Project -->
     <h3
       id="project-modal-title"
       class="text-xl md:text-2xl font-extrabold tracking-tight text-brand-text"
@@ -51,6 +52,7 @@ const stacks = PROJECTS_DATA.map((p) => ({
   </div>
 
   <div slot="content" class="flex flex-col gap-5">
+    <!-- Image Project -->
     <div
       class="w-full aspect-video rounded-xl overflow-hidden border border-brand-muted/15 bg-brand-muted/10"
     >
@@ -62,13 +64,9 @@ const stacks = PROJECTS_DATA.map((p) => ({
       />
     </div>
 
-    <p
-      id="project-modal-desc"
-      class="text-xs sm:text-sm text-brand-muted leading-relaxed"
-    >
-    </p>
-
-    <div class="flex flex-col gap-2 border-t border-brand-muted/15 pt-4">
+    <!-- Stack Section -->
+    <div class="flex flex-col gap-2 border-b border-brand-muted/25 pb-4">
+      <!-- Stack Label -->
       <h4
         data-i18n="project.card.stack"
         class="text-xs uppercase font-semibold tracking-wider text-brand-muted"
@@ -76,6 +74,7 @@ const stacks = PROJECTS_DATA.map((p) => ({
         {t("project.card.stack", "Stack")}
       </h4>
 
+      <!-- Stack -->
       {
         stacks.map(({ id, skills }) => (
           <div
@@ -94,6 +93,13 @@ const stacks = PROJECTS_DATA.map((p) => ({
         ))
       }
     </div>
+
+    <!-- Context Project -->
+    <p
+      id="project-modal-desc"
+      class="text-xs sm:text-sm text-brand-muted leading-relaxed"
+    >
+    </p>
 
     <div class="flex flex-wrap gap-3">
       <a

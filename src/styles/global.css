@@ -36,7 +36,7 @@ html {
   --color-brand-surface: #ffffff; /**Cards backgrounds*/
   --color-brand-text: #0f172a; /**Principal text*/
   --color-brand-muted: #64748b; /**Secondary text*/
-  --color-brand-accent: #0ea5e9; /**Accent*/
+  --color-brand-accent: #6b5cad; /**Accent*/
 }
 
 .dark {
@@ -44,7 +44,7 @@ html {
   --color-brand-surface: #111827; /**Cards backgrounds*/
   --color-brand-text: #f3f4f6; /**Principal text*/
   --color-brand-muted: #9ca3af; /**Secondary text*/
-  --color-brand-accent: #38bdf8; /**Accent*/
+  --color-brand-accent: #c1bbdd; /**Accent*/
 }
 
 body {
@@ -53,7 +53,7 @@ body {
   color: var(--color-brand-text);
   transition:
     background-color 0.3s ease,
-    color 0.3 ease;
+    color 0.3s ease;
   margin: 0;
   padding: 0;
 }

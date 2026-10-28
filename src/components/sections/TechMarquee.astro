@@ -14,7 +14,7 @@ const marqueeItems = [...allSkills, ...allSkills];
     <div class="animate-marquee flex gap-4 items-center py-2">
       {
         marqueeItems.map((skill) => (
-          <div class="shrink-0">
+          <div class="shrink-0 cursor-pointer select-none">
             <SkillBadge name={skill.name} showLevel={false}>
               <skill.icon slot="icon" class="w-4 h-4 text-brand-text" />
             </SkillBadge>
